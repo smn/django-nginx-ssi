@@ -1,0 +1,4 @@
+include CLASSIFIERS
+include README.rst
+include requirements.pip
+include LICENSE
