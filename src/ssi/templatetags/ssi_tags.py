@@ -10,11 +10,13 @@ register = Library()
 class SSINode(Node):
     def __init__(self, nodelist, ssi_key):
         self.nodelist = nodelist
+        if ssi_key not in cache:
+            cache.set(ssi_key, self.nodelist)
         self.ssi_key_var = Variable(ssi_key)
     
     def render(self, context):
-        return """<!--# include virtual="/ssi/%s/" -->""" % \
-            self.ssi_key_var.resolve(context)
+        cache_key = self.ssi_key_var.resolve(context)
+        return """<!--# include virtual="/ssi/%s/" -->""" % cache_key
     
 
 

@@ -95,3 +95,5 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'ssi',
 )
+
+CACHE_BACKEND = 'memcached://localhost:11211'
