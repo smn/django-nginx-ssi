@@ -97,3 +97,4 @@ INSTALLED_APPS = (
 )
 
 CACHE_BACKEND = 'memcached://localhost:11211'
+CACHE_SSI_KEY_PREFIX = 'development'

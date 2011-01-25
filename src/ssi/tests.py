@@ -1,5 +1,7 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.template import Template, Context
+from django.core.urlresolvers import reverse
+from ssi.utils import generate_ssi_cache_key
 
 class SSITestCase(TestCase):
     
@@ -10,13 +12,20 @@ class SSITestCase(TestCase):
         pass
     
     def test_ssi_template_rendering(self):
-        template = Template("""
-        {% load ssi_tags %}
-        {% ssi "test-ssi-template" %}
-            <b> okidoki </b> {% now "jS F Y H:i" %} Hello {{ foo }}
-        {% endssi %}
-        """)
+        ssi_fragment = '<b> okidoki </b> {%now "jS F Y H:i"%} Hello {{foo}}'
+        template_string = """
+            {% load ssi_tags %}
+            {% ssi "test-ssi-template" %}""" + ssi_fragment + """{% endssi %}
+        """
+        template = Template(template_string)
         context = Context({'foo': 'bar'})
-        response = template.render(context)
-        self.assertTrue('<!--# include virtual="/ssi/test-ssi-template/" -->' \
-                            in response)
+        template_response = template.render(context)
+        cache_key = generate_ssi_cache_key(ssi_fragment)
+        self.assertTrue('<!--# include virtual="/ssi/%s/" -->' % cache_key \
+                            in template_response)
+        
+        client = Client()
+        response = client.get(reverse('ssi',args=(cache_key,)))
+        template = Template(ssi_fragment)
+        self.assertEquals(response.content.strip(), template.render(context).strip())
+    
