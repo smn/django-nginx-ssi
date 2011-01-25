@@ -4,9 +4,9 @@ def listify(filename):
     return filter(None, open(filename,'r').read().split('\n'))
 
 setup(
-    name = "django-ssi",
+    name = "django-nginx-ssi",
     version = "0.1",
-    url = 'http://github.com/smn/django-ssi',
+    url = 'http://github.com/smn/django-nginx-ssi',
     license = 'BSD',
     description = "Django SSI library for use with Nginx",
     long_description = open('README.rst', 'r').read(),
