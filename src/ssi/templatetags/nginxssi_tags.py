@@ -9,24 +9,24 @@ from ssi.utils import generate_ssi_cache_key
 
 register = Library()
 
-class SSINode(Node):
+class NginxSSINode(Node):
     def __init__(self, cache_key):
         self.cache_key = cache_key
     
     def render(self, context):
         cache.set("%s:context" % self.cache_key, context)
-        return """<!--# include virtual="/ssi/%s/" -->""" % self.cache_key
+        return """<!--# include virtual="/nginxssi/%s/" -->""" % self.cache_key
     
 
 @register.tag
-def ssi(parser, token):
+def nginxssi(parser, token):
     tokens = token.split_contents()
     # automatically generate key based on template code
-    template_string = render_raw_template(parser, token, 'endssi')
+    template_string = render_raw_template(parser, token, 'endnginxssi')
     cache_key = generate_ssi_cache_key(template_string)
     if cache_key not in cache:
         cache.set(cache_key, template_string)
-    return SSINode(cache_key)
+    return NginxSSINode(cache_key)
 
 def render_raw_template(parser, token, parse_until):
     # from http://www.holovaty.com/writing/django-two-phased-rendering/
