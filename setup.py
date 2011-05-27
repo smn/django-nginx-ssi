@@ -5,7 +5,7 @@ def listify(filename):
 
 setup(
     name = "django-nginx-ssi",
-    version = "0.1",
+    version = "0.1.1",
     url = 'http://github.com/smn/django-nginx-ssi',
     license = 'BSD',
     description = "Django SSI library for use with Nginx",
